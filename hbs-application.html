@@ -1,0 +1,591 @@
+<html>
+    <head>
+        <title>Apply to HBS</title>
+        <script src="https://js.stripe.com/v3/"></script>
+        <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+            integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <style>
+            .required label::after {
+                content: "*";
+                color: red;
+                margin-left: 5px
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container pb-4" style="padding-top: 14px; border: 1px solid #ced4da; border-radius: 5px;">
+            <h2>Henry Barnard School Student Application</h2>
+            <hr>
+            <div class="mb-4 mt-4">
+                Please complete this form for <em>each child</em> seeking admission. Note that children seeking admission to Preschool must be toilet-trained before the start of the school year.
+            </div>
+            <div>
+                Once the application has been completed, you can submit along with <strong>payment of the $50 application fee</strong> directly below, or mail a check to
+                <strong>Henry Barnard School, P.O. Box 28153, Providence, RI 02908.</strong>
+            </div>
+
+            <hr class="mb-5">
+
+            <form id="application-form" action="">
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="name">Grade applying for</label>
+                        <select id="grade" class="form-control" required>
+                            <option value=""></option>
+                            <option value="Pre-K">Pre-K</option>
+                            <option value="Kindergarten">Kindergarten</option>
+                            <option value="1st grade">1st Grade</option>
+                            <option value="2nd grade">2nd Grade</option>Grade</option>
+                            <option value="3rd grade">3rd Grade</option>
+                            <option value="4th grade">4th Grade</option>
+                            <option value="5th grade">5th Grade</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="childs-first-name">Child's first name</label>
+                        <input id="childs-first-name" class="form-control" type="text"  required/>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="childs-last-name">Child's last name</label>
+                        <input id="childs-last-name" class="form-control" type="text"  required/>
+                    </div>
+
+                    <div class="form-group ml-2">
+                        <label for="childs-preferred-name">Child's preferred name (If different)</label>
+                        <input id="childs-preferred-name" class="form-control" type="text"/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="child-identifies-as">My child identifies as</label>
+                        <select id="child-identifies-as" class="form-control" required>
+                            <option value=""></option>
+                            <option value="Boy">Boy</option>
+                            <option value="Girl">Girl</option>
+                            <option value="Non-Binary">Non-Binary</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group ml-2">
+                        <label for="childs-preferred-pronouns">My child's preferred pronouns</label>
+                        <input id="childs-preferred-pronouns" class="form-control" type="" />
+                    </div>
+                </div>
+
+                <hr class="mt-3 mb-3">
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="dob">Child's date of birth</label>
+                        <input id="dob" class="form-control" type="date" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="address">Address</label>
+                        <input id="address" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="city">City</label>
+                        <input id="city" class="form-control" type="text" required/>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="state">State</label>
+                        <input id="state" class="form-control" type="text" required/>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="zip">Zip code</label>
+                        <input id="zip" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="phone">Home phone</label>
+                        <input id="phone" class="form-control" type="tel" required/>
+                    </div>
+                </div>
+
+                <hr class="mt-5 mb-5">
+                <h4 class="mb-3">Parent/Guardian Information</h4>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="resides-with">Child resides with</label>
+                        <select id="resides-with" class="form-control" required>
+                            <option value=""></option>
+                            <option value="Both Parents/Guardians">Both Parents/Guardians </option>
+                            <option value="Parent/Guardian 1">Parent/Guardian 1</option>
+                            <option value="Parent/Guardian 2">Parent/Guardian 2</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="mt-3 mb-2">
+                    <strong>Parent/Guardian 1</strong>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-salutation">Salutation</label>
+                        <select id="parent-guardian-1-salutation" class="form-control" required>
+                            <option value=""></option>
+                            <option value="Mr.">Mr.</option>
+                            <option value="Mrs.">Mrs.</option>
+                            <option value="Dr.">Dr.</option>
+                            <option value="Ms.">Ms.</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-first-name">First Name</label>
+                        <input id="parent-guardian-1-first-name" class="form-control" type="text" required/>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-last-name">Last Name</label>
+                        <input id="parent-guardian-1-last-name" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-email">Email address</label>
+                        <input id="parent-guardian-1-email" class="form-control" type="email" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-address">Address</label>
+                        <input id="parent-guardian-1-address" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-city">City</label>
+                        <input id="parent-guardian-1-city" class="form-control" type="text" required/>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-state">State</label>
+                        <input id="parent-guardian-1-state" class="form-control" type="text" required/>
+                    </div>
+
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-zip">Zip code</label>
+                        <input id="parent-guardian-1-zip" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="row pl-2">
+                    <div class="form-group required ml-2">
+                        <label for="parent-guardian-1-cell">Cell phone</label>
+                        <input id="parent-guardian-1-cell" class="form-control" type="tel" required/>
+                    </div>
+                </div>
+
+                <span class="parent-guardian-2">
+                    <div class="mt-3 mb-2">
+                        <strong>Parent/Guardian 2</strong>
+                    </div>
+
+                    <div class="row pl-2">
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-salutation">Salutation</label>
+                            <select id="parent-guardian-2-salutation" class="form-control">
+                                <option value=""></option>
+                                <option value="Mr.">Mr.</option>
+                                <option value="Mrs.">Mrs.</option>
+                                <option value="Dr.">Dr.</option>
+                                <option value="Ms.">Ms.</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-first-name">First Name</label>
+                            <input id="parent-guardian-2-first-name" class="form-control" type="text"/>
+                        </div>
+
+                        <div class="form-group required ml-2">
+                            <label for="parent-guardian-2-last-name">Last Name</label>
+                            <input id="parent-guardian-2-last-name" class="form-control" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="row pl-2">
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-email">Email address</label>
+                            <input id="parent-guardian-2-email" class="form-control" type="email"/>
+                        </div>
+                    </div>
+
+                    <div class="row pl-2">
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-address">Address</label>
+                            <input id="parent-guardian-2-address" class="form-control" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="row pl-2">
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-city">City</label>
+                            <input id="parent-guardian-2-city" class="form-control" type="text"/>
+                        </div>
+
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-state">State</label>
+                            <input id="parent-guardian-2-state" class="form-control" type="text"/>
+                        </div>
+
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-zip">Zip code</label>
+                            <input id="parent-guardian-2-zip" class="form-control" type="text"/>
+                        </div>
+                    </div>
+
+                    <div class="row pl-2">
+                        <div class="form-group ml-2">
+                            <label for="parent-guardian-2-cell">Cell phone</label>
+                            <input id="parent-guardian-2-cell" class="form-control" type="tel"/>
+                        </div>
+                    </div>
+                </span>
+
+                <hr class="mt-5 mb-5">
+
+                <h4 class="mt-5">Siblings </h4>
+                PLEASE LIST ANY SIBLINGS and the School at which they are currently enrolled
+                <div class="mt-3">
+                    <strong>Sibling 1</strong>
+                </div>
+                <div class="row pl-2">
+                    <div class="form-group ml-2">
+                        <label for="sibling-1-name">Name</label>
+                        <input id="sibling-1-name" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-1-school">School</label>
+                        <input id="sibling-1-school" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-1-grade">Grade</label>
+                        <input id="sibling-1-grade" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <strong>Sibling 2</strong>
+                </div>
+                <div class="row pl-2">
+                    <div class="form-group ml-2">
+                        <label for="sibling-2-name">Name</label>
+                        <input id="sibling-2-name" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-2-school">School</label>
+                        <input id="sibling-2-school" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-2-grade">Grade</label>
+                        <input id="sibling-2-grade" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <strong>Sibling 3</strong>
+                </div>
+                <div class="row pl-2">
+                    <div class="form-group ml-2">
+                        <label for="sibling-3-name">Name</label>
+                        <input id="sibling-3-name" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-3-school">School</label>
+                        <input id="sibling-3-school" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-3-grade">Grade</label>
+                        <input id="sibling-3-grade" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <div class="mt-3">
+                    <strong>Sibling 4</strong>
+                </div>
+                <div class="row pl-2">
+                    <div class="form-group ml-2">
+                        <label for="sibling-4-name">Name</label>
+                        <input id="sibling-4-name" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-4-school">School</label>
+                        <input id="sibling-4-school" class="form-control" type="text" required/>
+                    </div>
+                    <div class="form-group ml-2">
+                        <label for="sibling-4-grade">Grade</label>
+                        <input id="sibling-4-grade" class="form-control" type="text" required/>
+                    </div>
+                </div>
+
+                <hr class="mt-3 mb-5">
+                <h4 class="mt-5">Additional Questions </h4>
+                <div class="row pl-2 pr-2">
+                    <div class="form-group required ml-2">
+                        <label for="ideal-environment">What would be the ideal school environment for your child and your family?</label>
+                        <textarea id="ideal-environment" class="form-control" required rows="4" cols="70"></textarea>
+                    </div>
+                </div>
+
+                <div class="row pl-2 pr-2">
+                    <div class="form-group required ml-2">
+                        <label for="curious-child">Complete this sentence: “When my child is curious about something...”</label>
+                        <textarea id="curious-child" class="form-control" required rows="4" cols="70"></textarea>
+                    </div>
+                </div>
+
+                <div class="row pl-2 pr-2">
+                    <div class="form-group required ml-2">
+                        <label for="contribution">How would your family like to contribute to the Henry Barnard School community?</label>
+                        <textarea id="contribution" class="form-control" required rows="4" cols="70"></textarea>
+                    </div>
+                </div>
+
+                <div class="row pl-2 pr-2">
+                    <div class="form-group required ml-2">
+                        <label for="most-recent-schooling">If your child has not previously attended HBS, please tell us about their <br/>most recent schooling/childcare experience.</label>
+                        <textarea id="most-recent-schooling" class="form-control" required rows="4" cols="70"></textarea>
+                    </div>
+                </div>
+
+                <hr class="mt-4 mb-4">
+
+                <div class="row pl-2 pr-2">
+                    <div class="form-group ml-2">
+                        <h4 for="how-did-you-hear-about-us">How did you hear about us?</h4>
+                        <fieldset>
+                            <div class="form-check">
+                                <input type="checkbox" id="hear-website" class="form-check-input"/>
+                                <label class="form-check-label">Website</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="hear-friend-parent" class="form-check-input"/>
+                                <label class="form-check-label">Friend/Parent</label>
+                                <!-- <input type="text" class="form-control" placeholder="Name" id="hear-friend-parent-detail"> -->
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="hear-advertisement" class="form-check-input"/>
+                                <label for="hear-advertisement" class="form-check-label">Advertisement</label>
+                                <!-- <input type="text" class="form-control" placeholder="Media type" id="hear-other-detail"> -->
+                            </div>
+                            <div class="form-check">
+                                <input type="checkbox" id="hear-other" class="form-check-input"/>
+                                <label for="hear-other" class="form-check-label">Other</label>
+                                <input type="text" class="form-control" placeholder="Details" id="hear-other-detail">
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+
+                <hr class="mt-4 mb-4">
+
+                <div class="row pl-2 pr-2 mt-4">
+                    <div class="form-group ml-2">
+                        <strong>
+                            OPTIONAL: For Federal and State reporting purposes, we are asked to obtain the following information concerning the ethnicity of all applicants. This information is not used in the determination of admission to Henry Barnard School.
+                        </strong>
+                            <div class="form-group">
+                                <select id="ethnicity" class="form-control">
+                                    <option value=""></option>
+                                    <option value="American Indian or Alaska Native">American Indian or Alaska Native</option>
+                                    <option value="Asian">Asian</option>
+                                    <option value="Black or African American">Black or African American</option>
+                                    <option value="Hispanic">Hispanic</option>
+                                    <option value="Native Hawaiian or Other Pacific Islander">Native Hawaiian or Other Pacific Islander</option>
+                                    <option value="White">White</option>
+                                    <option value="Two or More Races">Two or More Races</option>
+                                </select>
+
+                            </div>
+
+                    </div>
+                </div>
+
+                <hr class="mt-4 mb-4">
+                <div class="row pl-2 pr-2">
+                    <div class="form-group ml-2">
+                        <h4>Application Fee - $50</h4>
+                        <div>
+                            <label for="payment-type" class="form-check-label">How would you like to pay the application fee?</label>
+                            <select class="form-control ml" id="payment-type" required>
+                                <option value=""></option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Check">Check</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="mt-3 d-none" id="credit-card-payment">
+                    <div class="row pl-2 pr-2">
+                        <div class="form-group ml-2">
+                            <label for="cc-name">Name</label>
+                            <input id="cc-name" class="form-control" type="text" required/>
+                        </div>
+
+                        <div class="form-group ml-2">
+                            <label for="cc-email">Email</label>
+                            <input id="cc-email" class="form-control" type="email" placeholder="name@example.com" required/>
+                        </div>
+                    </div>
+
+                    <label for="card-element">Credit Card</label>
+                    <div id="card-element" style="padding: 10px; border: 1px solid #ced4da; border-radius: 5px; margin-bottom: 30px;">
+                        <!-- Elements will create input elements here -->
+                    </div>
+                </div>
+
+                <div class="row pl-2 pr-2 d-none" id="check-payment">
+                    <button type="button" class="btn btn-info">Download Check Form</button>
+                </div>
+
+                <div class="mt-3 mb-3 ml-2">
+                    <em>Henry Barnard School is committed to equal opportunity in admissions and employment. No student, employee, or applicant will be denied admission, employment, or access to program activities because of race, sex, gender, gender identity, religion, age, color, national origin, handicap, sexual orientation, conviction record, or Vietnam-era status.</em>
+                </div>
+                <button class="btn btn-success mt-3 ml-2" id="submit">Apply</button>
+            </form>
+        </div>
+    </body>
+
+    <script>
+        $(document).ready(function () {
+            // Stripe settings
+            var stripe = Stripe(
+                "pk_test_51Hy74yDnj8WOjoQR8DeNbYpYjD4cta0nRYvGkgUHNOVDWeqZiCFZHLpnHLHwFk8DGSxSdOXOCNudjwLEnBIms01o005xLsMlIH"
+            );
+            var elements = stripe.elements();
+            var style = {
+                base: {
+                    color: "#32325d",
+                },
+            };
+            var card = elements.create("card", {
+                style: style,
+            });
+
+            card.mount("#card-element");
+            card.on("change", ({ error }) => {
+                const displayError = document.getElementById("card-errors");
+                if (error) {
+                    displayError.textContent = error.message;
+                } else {
+                    displayError.textContent = "";
+                }
+            });
+
+
+            let form = document.getElementById("application-form");
+            form.addEventListener("submit",  event => {
+                $("#submit").html("Submitting").prop("disabled", "true");
+                event.preventDefault();
+
+                stripe
+                    .createPaymentMethod({
+                        type: "card",
+                        card: card,
+                        billing_details: {
+                            // Include any additional collected billing details.
+                            name: $("#cc-name").val(),
+                            email: $("#cc-email").val(),
+                        },
+                    })
+                    .then(stripePaymentMethodHandler);
+            });
+
+            function stripePaymentMethodHandler(result) {
+                if (result.error) {
+                    // Show error to user
+                    console.log(result.error);
+                    $("#submit").html("Apply!").prop("disabled", "false");
+                } else {
+                    let formData = {
+                        // Send the tokenized card
+                        _payment_method: result.paymentMethod.id,
+                        email: $("#cc-email").val(),
+                        submitted: new Date().toDateString()
+                    };
+                    Array.from(document.forms[0]).reduce(
+                        (acc, currentVal) => {
+                            acc[currentVal.id] = currentVal.value || currentVal.checked || "";
+                            return acc;
+                        },
+                        formData
+                    );
+
+                    // Otherwise send payment method to your server
+                    fetch("https://formspree.io/f/mleopzjn", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData)
+                    }).then(function (result) {
+                        // Handle server response
+                        result.json().then(function (json) {
+                            handleServerResponse(json);
+                        });
+                    });
+                }
+            }
+
+            function handleServerResponse(response) {
+                console.log(response);
+                $("#submit").html("Apply!").removeProp("disabled");
+                if (response.ok) {
+                    // Display errors on the payment form
+                    $("#payment-form").addClass("d-none");
+                    $("#thank-you").removeClass("d-none");
+                } else {
+                    $("#card-errors").text(response.message);
+                }
+            }
+
+            document.getElementById('payment-type').addEventListener("change", event => {
+                let ccClasses = document.getElementById("credit-card-payment").classList;
+                if (event.target.value === "Credit Card") {
+                    ccClasses.remove("d-none")
+                } else {
+                    ccClasses.add("d-none");
+                }
+
+                let checkClasses = document.getElementById("check-payment").classList;
+                if (event.target.value === "Check") {
+                    checkClasses.remove("d-none")
+                } else {
+                    checkClasses.add("d-none");
+                }
+            });
+        });
+    </script>
+</html>
