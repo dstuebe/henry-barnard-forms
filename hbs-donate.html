@@ -1,5 +1,5 @@
 <head>
-    <title>Checkout</title>
+    <title>Donate</title>
     <script src="https://js.stripe.com/v3/"></script>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
     <meta charset="utf-8">
@@ -31,8 +31,14 @@
                     <div class="input-group-prepend">
                         <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
                     </div>
-                    <input id="amount" class="form-control" type="number" required />
+                    <input id="amount" class="form-control" type="number" min="1" required />
                 </div>
+            </div>
+
+
+            <div class="form-check pt-3 pb-3">
+                <input id="stay-informed" type="checkbox" checked />
+                <label for="stay-informed">Please keep me informed about the new Henry Barnard School!</label>
             </div>
 
             <div class="form-group">
@@ -48,9 +54,9 @@
             <button class="btn btn-success" id="submit">Donate!</button>
         </form>
 
-        <h2 id="thank-you" class="d-none mt-5 mb-5">
+        <h4 id="thank-you" class="d-none mt-5 mb-5">
             Thank you for your donation!
-        </h2>
+        </h4>
     </div>
 
 
@@ -114,6 +120,8 @@
                             _payment_method: result.paymentMethod.id,
                             email: $("#email").val(),
                             _price: $("#amount").val(),
+                            name: $("#name").val(),
+                            stay_informed: $("#stay-informed").is(":checked")
                             // add here any data that you want to send to Formspree
                         }),
                     }).then(function (result) {
