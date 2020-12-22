@@ -427,15 +427,17 @@
                 </div>
 
                 <hr class="mt-4 mb-4">
-                <div class="row pl-2 pr-2">
+
+                <div class="row pl-2 pr-2" id="payment-type-group">
                     <div class="form-group ml-2">
                         <h4>Application Fee - $50</h4>
                         <div>
-                            <label for="payment-type" class="form-check-label">How would you like to pay the application fee?</label>
+                            <label for="payment-type" class="form-check-label">How would you like to pay the application fee?</label> <div><em>Fee is waived for existing families</em></div>
                             <select class="form-control" id="payment-type" required>
                                 <option value=""></option>
                                 <option value="Credit Card">Credit Card</option>
                                 <option value="Check">Check</option>
+                                <option value="Existing Family">Existing Family (fee waived)</option>
                             </select>
                         </div>
 
@@ -468,27 +470,38 @@
                 </div>
 
                 <div class="form-check pt-3 pb-3">
-                    <input id="stay-informed" type="checkbox" checked />
-                    <label for="stay-informed">Please keep me informed about the new Henry Barnard School!</label>
+                    <input id="_optin" type="checkbox" checked />
+                    <label for="_optin">Please keep me informed about the new Henry Barnard School!</label>
                 </div>
 
                 <button class="btn btn-success mt-3 ml-2" id="submit">Apply</button>
             </form>
 
-            <h4 id="thank-you" class="d-none mt-5 mb-5">
-                Thank you. Your application has been received. If paying by check your application will not be reviewed until payment is received.
+            <div id="thank-you" class="d-none mt-5 mb-5">
+                <h4>Thank you. Your application has been received. </h4>
+                <br/>- If paying by check your application will not be reviewed until payment is received.
+                <br/> - A representative from Henry Barnard School will be in contact with you soon.
 
-                <div class="row pl-2 pr-2 d-none" id="check-payment">
+                <div class="row pl-2 pr-2 mt-3" id="check-payment">
                     <a href="https://drive.google.com/file/d/1hME4a2FQTMBJah17Ee-Cfsekw28uosIj/view?usp=sharing" target="_blank" type="button" class="btn btn-info">Download Check Form</a>
                 </div>
-            </h4>
+            </div>
         </div>
     </body>
 
     <script>
 
-        const formSpreeCreditId = "mleopzjn";
         const formSpreeCheckId = "xzbkjjyv";
+
+        // Test Keys for Card Payments
+        //const formSpreeCreditId = "mleopzjn";
+        //const stripeKey = "pk_test_51Hy74yDnj8WOjoQRyboXSG4gKsFMYFG3EG4H3Hn2Qp3XE11bXlLWLeoYZBrenaZDr8FMzjLwfqeDr0C9uSs3WVtL006yqiN34K";
+
+
+        // Production Keys for Car Payments (Live payments)
+        const formSpreeCreditId = "mzbkjoea";
+        const stripeKey = "pk_live_51Hy74yDnj8WOjoQRVldAbCMGfOE52XnnG77kBxW7exeZqiUhpMB6vDZTtwjRIpVaCYBMlNpxMM5WhvSqtNr9aW7z00DZYqasZc";
+
 
         // pull down the form data and add to the object passed in
         function getFormData(formData) {
@@ -513,9 +526,7 @@
 
         $(document).ready(function () {
             // Stripe settings
-            var stripe = Stripe(
-                "pk_test_51Hy74yDnj8WOjoQRyboXSG4gKsFMYFG3EG4H3Hn2Qp3XE11bXlLWLeoYZBrenaZDr8FMzjLwfqeDr0C9uSs3WVtL006yqiN34K"
-            );
+            var stripe = Stripe(stripeKey);
             var elements = stripe.elements();
             var style = {
                 base: {
@@ -559,7 +570,7 @@
                         .finally(() => $("#submit").html("Apply").prop("disabled", "false"));
                 }
 
-                if (paymentType === "Check") {
+                if (paymentType === "Check" || paymentType === "Existing Family") {
                     let formData = getFormData({ });
 
                     fetch("https://formspree.io/f/" + formSpreeCheckId, {
@@ -597,9 +608,12 @@
                         body: JSON.stringify(formData)
                     }).then(function (result) {
                         // Handle server response
+                        console.log("result", result);
                         result.json().then(function (json) {
                             handleServerResponse(json);
                         });
+                    }).catch(function(error) {
+                        console.log(error)
                     });
 
                 }
@@ -610,7 +624,7 @@
                 $("#submit").html("Apply").removeProp("disabled");
                 if (response.ok) {
                     // Display errors on the payment form
-                    $("#application-form").addClass("d-none");
+                    $("#submit").addClass("d-none");
                     $("#thank-you").removeClass("d-none");
                 } else {
                     $("#card-errors").text(response.message);
