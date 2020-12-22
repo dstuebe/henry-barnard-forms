@@ -1,0 +1,158 @@
+<head>
+    <title>Donate</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+
+</head>
+
+<body>
+    <div class="container" style="padding-top: 14px; border: 1px solid #ced4da; border-radius: 5px;">
+        <form id="payment-form" action="">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input id="name" class="form-control" type="text" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input id="email" class="form-control" type="email" placeholder="name@example.com" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="validationTooltipUsernamePrepend">$</span>
+                    </div>
+                    <input id="amount" class="form-control" type="number" min="1" required />
+                </div>
+            </div>
+
+
+            <div class="form-check pt-3 pb-3">
+                <input id="stay-informed" type="checkbox" checked />
+                <label for="stay-informed">Please keep me informed about the new Henry Barnard School!</label>
+            </div>
+
+            <div class="form-group">
+                <label for="name">Credit Card</label>
+                <div id="card-element" style="padding: 10px; border: 1px solid #ced4da; border-radius: 5px; margin-bottom: 30px;">
+                    <!-- Elements will create input elements here -->
+                </div>
+            </div>
+
+            <!-- We'll put the error messages in this element -->
+            <div id="card-errors" role="alert" class="mb-3"></div>
+
+            <button class="btn btn-success" id="submit">Donate!</button>
+        </form>
+
+        <h4 id="thank-you" class="d-none mt-5 mb-5">
+            Thank you for your donation!
+        </h4>
+    </div>
+
+
+    <script>
+        // TEST KEYS (use stripe key defined in formspree integration)
+        // let formSpreeId = "xbjpanyy"; // test form id
+        // let stripeKey = "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr";
+
+        // PRODUCTION KEYS (use stripe key defined in formspree integration)
+        let formSpreeId = "mbjpzlvd";
+        let stripeKey = "pk_live_51Hu7RdLakRxjs239B1xiw7Urdj2yTYtQANqaOCau5t0D8e0pUWm5f8r30bqqInXMpcrMVRB1Q3vTxIjqa46fF90B00cnn1kf7Q";
+
+
+        $(document).ready(function () {
+            // Stripe settings
+
+            var stripe = Stripe(stripeKey);
+
+            var elements = stripe.elements();
+            var style = {
+                base: {
+                    color: "#32325d",
+                },
+            };
+            var card = elements.create("card", {
+                style: style,
+            });
+
+            card.mount("#card-element");
+            card.on("change", ({ error }) => {
+                const displayError = document.getElementById("card-errors");
+                if (error) {
+                    displayError.textContent = error.message;
+                } else {
+                    displayError.textContent = "";
+                }
+            });
+            // end stripe
+
+            var form = document.getElementById("payment-form");
+            form.addEventListener("submit", function (ev) {
+                $("#submit").html("Submitting").prop("disabled", "true");
+                event.preventDefault();
+                // Tokenize card info
+                stripe
+                    .createPaymentMethod({
+                        type: "card",
+                        card: card,
+                        billing_details: {
+                            // Include any additional collected billing details.
+                            name: $("#name").val(),
+                            email: $("#email").val(),
+                        },
+                    })
+                    .then(stripePaymentMethodHandler);
+            });
+
+            function stripePaymentMethodHandler(result) {
+                if (result.error) {
+                    // Show error to user
+                    console.log(result.error);
+                    $("#submit").html("Donate!").prop("disabled", "false");
+                } else {
+                    // Otherwise send payment method to your server
+                    fetch("https://formspree.io/f/" + formSpreeId, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            // Send the tokenized card
+                            _payment_method: result.paymentMethod.id,
+                            email: $("#email").val(),
+                            _price: $("#amount").val(),
+                            name: $("#name").val(),
+                            _optin: $("#stay-informed").is(":checked")
+                            // add here any data that you want to send to Formspree
+                        }),
+                    }).then(function (result) {
+                        // Handle server response
+                        result.json().then(function (json) {
+                            handleServerResponse(json);
+                        });
+                    });
+                }
+            }
+
+            function handleServerResponse(response) {
+                console.log(response);
+                $("#submit").html("Donate!").removeProp("disabled");
+                if (response.ok) {
+                    // Display errors on the payment form
+                    $("#payment-form").addClass("d-none");
+                    $("#thank-you").removeClass("d-none");
+                } else {
+                    $("#card-errors").text(response.message);
+                }
+            }
+        });
+    </script>
+</body>
