@@ -61,11 +61,20 @@
 
 
     <script>
+        // TEST KEYS (use stripe key defined in formspree integration)
+        // let formSpreeId = "xbjpanyy"; // test form id
+        // let stripeKey = "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr";
+
+        // PRODUCTION KEYS (use stripe key defined in formspree integration)
+        let formSpreeId = "mbjpzlvd";
+        let stripeKey = "pk_live_51Hu7RdLakRxjs239B1xiw7Urdj2yTYtQANqaOCau5t0D8e0pUWm5f8r30bqqInXMpcrMVRB1Q3vTxIjqa46fF90B00cnn1kf7Q";
+
+
         $(document).ready(function () {
             // Stripe settings
-            var stripe = Stripe(
-                "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr"
-            );
+
+            var stripe = Stripe(stripeKey);
+
             var elements = stripe.elements();
             var style = {
                 base: {
@@ -112,7 +121,7 @@
                     $("#submit").html("Donate!").prop("disabled", "false");
                 } else {
                     // Otherwise send payment method to your server
-                    fetch("https://formspree.io/f/xbjpanyy", {
+                    fetch("https://formspree.io/f/" + formSpreeId, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify({
@@ -121,7 +130,7 @@
                             email: $("#email").val(),
                             _price: $("#amount").val(),
                             name: $("#name").val(),
-                            stay_informed: $("#stay-informed").is(":checked")
+                            _optin: $("#stay-informed").is(":checked")
                             // add here any data that you want to send to Formspree
                         }),
                     }).then(function (result) {
