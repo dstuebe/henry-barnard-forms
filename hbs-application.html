@@ -639,7 +639,7 @@
                     $("#submit").addClass("d-none");
                     $("#thank-you").removeClass("d-none");
                 } else {
-                    $("#card-errors").text(response.message).removeClass("d-none");
+                    $("#card-errors").text(JSON.stringify(response)).removeClass("d-none");
                 }
             }
 
