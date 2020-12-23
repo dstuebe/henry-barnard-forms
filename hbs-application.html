@@ -605,7 +605,7 @@
                 if (result.error) {
                     // Show error to user
                     $("#card-errors").html(result.error.messge).removeClass("d-none");
-                    $("#submit").html("Apply").prop("disabled", "false");
+                    $("#submit").html("Apply").removeProp("disabled");
                 } else {
                     let formData = getFormData({
                         // Send the tokenized card
