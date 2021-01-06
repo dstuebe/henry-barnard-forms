@@ -8,8 +8,6 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-
-
 </head>
 
 <body>
@@ -20,9 +18,37 @@
                 <input id="name" class="form-control" type="text" required/>
             </div>
 
+
             <div class="form-group">
                 <label for="email">Email</label>
-                <input id="email" class="form-control" type="email" placeholder="name@example.com" required/>
+                <input id="email" title="By making a donation, you will receive updates on the Henry Barnard School. You may unsubscribe at any time." class="form-control" type="email" placeholder="name@example.com" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+                <input id="phone" title="We may contact you at this number about your donation and other opportunities to support the Henry Barnard School." class="form-control" type="phone" placeholder="123-345-6789" required/>
+            </div>
+
+            <div class="form-group">
+                <label for="address">Address</label>
+                <input id="address" class="form-control" type="text" required/>
+            </div>
+
+            <div class="row pl-2">
+                <div class="form-group ml-2">
+                    <label for="city">City</label>
+                    <input id="city" class="form-control" type="text" required/>
+                </div>
+
+                <div class="form-group ml-2">
+                    <label for="state">State</label>
+                    <input id="state" class="form-control" type="text" required/>
+                </div>
+
+                <div class="form-group ml-2">
+                    <label for="zip">Zip code</label>
+                    <input id="zip" class="form-control" type="text" required/>
+                </div>
             </div>
 
             <div class="form-group">
@@ -35,10 +61,14 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label for="message">Message</label>
+                <input id="message" class="form-control" type="text" required/>
+            </div>
 
             <div class="form-check pt-3 pb-3">
-                <input id="stay-informed" type="checkbox" checked />
-                <label for="stay-informed">Please keep me informed about the new Henry Barnard School!</label>
+                <input id="anonymous" type="checkbox" unchecked />
+                <label for="anonymous">This gift is ananymous</label>
             </div>
 
             <div class="form-group">
@@ -62,12 +92,12 @@
 
     <script>
         // TEST KEYS (use stripe key defined in formspree integration)
-        // let formSpreeId = "xbjpanyy"; // test form id
-        // let stripeKey = "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr";
+        let formSpreeId = "xbjpanyy"; // test form id
+        let stripeKey = "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr";
 
         // PRODUCTION KEYS (use stripe key defined in formspree integration)
-        let formSpreeId = "mbjpzlvd";
-        let stripeKey = "pk_live_51Hu7RdLakRxjs239B1xiw7Urdj2yTYtQANqaOCau5t0D8e0pUWm5f8r30bqqInXMpcrMVRB1Q3vTxIjqa46fF90B00cnn1kf7Q";
+        // let formSpreeId = "mbjpzlvd";
+        // let stripeKey = "pk_live_51Hu7RdLakRxjs239B1xiw7Urdj2yTYtQANqaOCau5t0D8e0pUWm5f8r30bqqInXMpcrMVRB1Q3vTxIjqa46fF90B00cnn1kf7Q";
 
 
         $(document).ready(function () {
@@ -128,9 +158,16 @@
                             // Send the tokenized card
                             _payment_method: result.paymentMethod.id,
                             email: $("#email").val(),
+                            phone: $("#phone").val(),
                             _price: $("#amount").val(),
                             name: $("#name").val(),
-                            _optin: $("#stay-informed").is(":checked")
+                            anonymous: $("#anonymous").is(":checked"),
+                            address: $("#address").val(),
+                            city: $("#city").val(),
+                            state: $("#state").val(),
+                            zip: $("#zip").val(),
+                            message: $("#message").val()
+
                             // add here any data that you want to send to Formspree
                         }),
                     }).then(function (result) {
