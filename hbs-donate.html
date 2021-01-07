@@ -8,50 +8,110 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        .required label::after {
+            content: "*";
+            color: red;
+            margin-left: 5px
+        }
+
+        #card-errors {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container" style="padding-top: 14px; border: 1px solid #ced4da; border-radius: 5px;">
         <form id="payment-form" action="">
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input id="name" class="form-control" type="text" required/>
+            <div class="form-group required">
+                <label for="first_name">First Name</label>
+                <input id="first_name" class="form-control" type="text" required/>
             </div>
 
+            <div class="form-group required">
+                <label for="last_name">Last Name</label>
+                <input id="last_name" class="form-control" type="text" required/>
+            </div>
 
-            <div class="form-group">
+            <div class="form-group required">
                 <label for="email">Email</label>
                 <input id="email" title="By making a donation, you will receive updates on the Henry Barnard School. You may unsubscribe at any time." class="form-control" type="email" placeholder="name@example.com" required/>
             </div>
 
-            <div class="form-group">
+            <div class="form-group required">
                 <label for="phone">Phone</label>
                 <input id="phone" title="We may contact you at this number about your donation and other opportunities to support the Henry Barnard School." class="form-control" type="phone" placeholder="123-345-6789" required/>
             </div>
 
-            <div class="form-group">
+            <div class="form-group required">
                 <label for="address">Address</label>
                 <input id="address" class="form-control" type="text" required/>
             </div>
 
             <div class="row pl-2">
-                <div class="form-group ml-2">
+                <div class="form-group required ml-2">
                     <label for="city">City</label>
                     <input id="city" class="form-control" type="text" required/>
                 </div>
 
-                <div class="form-group ml-2">
+                <div class="form-group required ml-2">
                     <label for="state">State</label>
                     <input id="state" class="form-control" type="text" required/>
                 </div>
 
-                <div class="form-group ml-2">
+                <div class="form-group required ml-2">
                     <label for="zip">Zip code</label>
                     <input id="zip" class="form-control" type="text" required/>
                 </div>
             </div>
 
             <div class="form-group">
+                <label for="message">Please take a minute to tell us about your connection to the Henry Barnard School</label>
+                <input id="message" class="form-control" type="text"/>
+            </div>
+
+            <div class="form-check pt-3 pb-3">
+                <input id="anonymous" type="checkbox" unchecked />
+                <label for="anonymous" title="Your name will not be listed as a donor if you check this box">Make this gift ananymous</label>
+            </div>
+
+
+            <div class="form-check pt-3 pb-3">
+                <input id="tribute" type="checkbox" unchecked />
+                <label for="tribute" title="To make a gift in honor of or in memory of an individual">Tribute Gift</label>
+            </div>
+
+            <div class="form-group d-none" id="tribute_group">
+                <div class="row pl-4">
+                  <input type="radio" id="in_honor_of" name="tribute_type" value="in_honor_of" checked>
+                  <label for="in_honor">In honor of</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="radio" id="in_memory_of" name="tribute_type" value="in_memory_of">
+                  <label for="in_memory_of">In memory of</label>
+                </div>
+
+                <div class="form-group required">
+                    <div class="form-check pt-3 pb-3">
+                        <label for="tribute_name" title="The name of the person your would like to dedicate this gift too">Name of Person</label>
+                        <input id="tribute_name" class="form-control" type="text"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <p>Please check the area(s) you wish to designate your gift:</p>
+                <div class="row pl-4">
+                  <input type="radio" id="hbs_fund" name="gift_designation" value="hbs_fund" checked>
+                  <label for="hbs_fund">The Fund for Henry Barnard</label>&nbsp;&nbsp;&nbsp;&nbsp;
+                  <input type="radio" id="faculty_and_staff" name="gift_designation" value="faculty_and_staff">
+                  <label for="faculty_and_staff">Supporting faculty and staff</label>
+                </div>
+            </div>
+
+            <div class="form-group required">
                 <label for="amount">Amount</label>
                 <div class="input-group">
                     <div class="input-group-prepend">
@@ -61,17 +121,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
-                <label for="message">Message</label>
-                <input id="message" class="form-control" type="text" required/>
-            </div>
-
-            <div class="form-check pt-3 pb-3">
-                <input id="anonymous" type="checkbox" unchecked />
-                <label for="anonymous">This gift is ananymous</label>
-            </div>
-
-            <div class="form-group">
+            <div class="form-group required">
                 <label for="name">Credit Card</label>
                 <div id="card-element" style="padding: 10px; border: 1px solid #ced4da; border-radius: 5px; margin-bottom: 30px;">
                     <!-- Elements will create input elements here -->
@@ -79,7 +129,7 @@
             </div>
 
             <!-- We'll put the error messages in this element -->
-            <div id="card-errors" role="alert" class="mb-3"></div>
+            <div id="card-errors" role="alert" class="mb-3 pl-2 pt-2 pb-2 pr-2 d-none"></div>
 
             <button class="btn btn-success" id="submit">Donate!</button>
         </form>
@@ -92,12 +142,12 @@
 
     <script>
         // TEST KEYS (use stripe key defined in formspree integration)
-        let formSpreeId = "xbjpanyy"; // test form id
-        let stripeKey = "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr";
+        // let formSpreeId = "xbjpanyy"; // test form id
+        // let stripeKey = "pk_test_51Hu7RdLakRxjs239XS5UyVjU22QLgLqqGzcjRJu4NrdoOLxMtbrVYkHhayD08knYKsPzDCqZdGcjYeADBB11Wejh00bJr4Zqfr";
 
         // PRODUCTION KEYS (use stripe key defined in formspree integration)
-        // let formSpreeId = "mbjpzlvd";
-        // let stripeKey = "pk_live_51Hu7RdLakRxjs239B1xiw7Urdj2yTYtQANqaOCau5t0D8e0pUWm5f8r30bqqInXMpcrMVRB1Q3vTxIjqa46fF90B00cnn1kf7Q";
+        let formSpreeId = "mbjpzlvd";
+        let stripeKey = "pk_live_51Hu7RdLakRxjs239B1xiw7Urdj2yTYtQANqaOCau5t0D8e0pUWm5f8r30bqqInXMpcrMVRB1Q3vTxIjqa46fF90B00cnn1kf7Q";
 
 
         $(document).ready(function () {
@@ -148,9 +198,19 @@
                 if (result.error) {
                     // Show error to user
                     console.log(result.error);
-                    $("#submit").html("Donate!").prop("disabled", "false");
+                    $("#card-errors").text(result.error.message).removeClass("d-none");
+                    $("#submit").html("Donate!").removeProp("disabled");
                 } else {
                     // Otherwise send payment method to your server
+
+                    if ($("#tribute").is(":checked")) {
+                       var tribute_type = $('input[name="tribute_type"]:checked').val();
+                       var tribute_name = $("#tribute_name").val();
+                    } else {
+                        tribute_type = null;
+                        tribute_name = null;
+                    }
+
                     fetch("https://formspree.io/f/" + formSpreeId, {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -160,13 +220,18 @@
                             email: $("#email").val(),
                             phone: $("#phone").val(),
                             _price: $("#amount").val(),
-                            name: $("#name").val(),
+                            first_name: $("#first_name").val(),
+                            last_name: $("#last_name").val(),
                             anonymous: $("#anonymous").is(":checked"),
                             address: $("#address").val(),
                             city: $("#city").val(),
                             state: $("#state").val(),
                             zip: $("#zip").val(),
-                            message: $("#message").val()
+                            message: $("#message").val(),
+                            tribute: $("#tribute").is(":checked"),
+                            tribute_type: tribute_type,
+                            tribute_name: tribute_name,
+                            gift_designation: $("input[name='gift_designation']:checked").val()
 
                             // add here any data that you want to send to Formspree
                         }),
@@ -187,9 +252,21 @@
                     $("#payment-form").addClass("d-none");
                     $("#thank-you").removeClass("d-none");
                 } else {
-                    $("#card-errors").text(response.message);
+                    $("#card-errors").text(response.message).removeClass("d-none");
                 }
             }
+
+            document.getElementById('tribute').addEventListener("change", event => {
+                let tgClasses = document.getElementById("tribute_group").classList;
+                if (event.target.checked) {
+                    tgClasses.remove("d-none");
+                    $("tribute_name").attr("required", true);
+
+                } else {
+                    tgClasses.add("d-none");
+                    $("tribute_name").removeAttr("required");
+                }
+            });
         });
     </script>
 </body>
