@@ -1,0 +1,185 @@
+<head>
+    <title>Donate</title>
+    <script src="https://js.stripe.com/v3/"></script>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <style>
+        .required label::after {
+            content: "*";
+            color: red;
+            margin-left: 5px
+        }
+
+        #card-errors {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container" style="padding-top: 14px; border: 1px solid #ced4da; border-radius: 5px;">
+        <form id="payment-form" action="">
+            <div class="form-group required">
+                <label for="first_name">First Name</label>
+                <input id="first_name" class="form-control" type="text" required/>
+            </div>
+
+            <div class="form-group required">
+                <label for="last_name">Last Name</label>
+                <input id="last_name" class="form-control" type="text" required/>
+            </div>
+
+            <div class="form-group required">
+                <label for="email">Email</label>
+                <input id="email" title="By making a donation, you will receive updates on the Henry Barnard School. You may unsubscribe at any time." class="form-control" type="email" placeholder="name@example.com" required/>
+            </div>
+
+            <div class="form-group required">
+                <label for="phone">Phone</label>
+                <input id="phone" title="We may contact you at this number about your donation and other opportunities to support the Henry Barnard School." class="form-control" type="phone" placeholder="123-345-6789" required/>
+            </div>
+
+            <div class="form-group required">
+                <label for="studend_first_name">Student First Name</label>
+                <input id="student_first_name" class="form-control" type="text" required/>
+            </div>
+
+            <div class="form-group required">
+                <label for="student_last_name">Student Last Name</label>
+                <input id="student_last_name" class="form-control" type="text" required/>
+            </div>
+            
+
+            <div class="form-group required">
+                <label for="name">Credit Card</label>
+                <div id="card-element" style="padding: 10px; border: 1px solid #ced4da; border-radius: 5px; margin-bottom: 30px;">
+                    <!-- Elements will create input elements here -->
+                </div>
+            </div>
+
+            
+            <!-- We'll put the error messages in this element -->
+            <div id="card-errors" role="alert" class="mb-3 pl-2 pt-2 pb-2 pr-2 d-none"></div>
+
+            <div>
+                <p>Your card will be charged $1029</p>
+                <button class="btn btn-success" id="submit">Submit!</button>
+            </div>
+        </form>
+
+        <h4 id="thank-you" class="d-none mt-5 mb-5">
+            Thank you for your deposit. We are so excited for next fall!
+        </h4>
+    </div>
+
+
+    <script>
+        // TEST KEYS (use stripe key defined in formspree integration)
+        let formSpreeId = "mjvplbql"; // test form id
+        let stripeKey = "pk_test_51Hy74yDnj8WOjoQRNWwos3BTEs1y2N5YGqV8Lfhry9qIRs3v31vV73LBzbNTOS2EDEQdz5lCVm4Hqz4o01aiCdMP00MFJMbz3v";
+
+        // PRODUCTION KEYS (use stripe key defined in formspree integration)
+        // let formSpreeId = "xdopbnrj";
+        // let stripeKey = "pk_live_51Hy74yDnj8WOjoQRFqSgrezK9GEPVvEhrnaSS9Tk3WY7UUqGPd090lmH0YfrjHA7l5klGcC1OokGh6DwaNaXr1tw003mWVhAxc";
+
+
+        $(document).ready(function () {
+            // Stripe settings
+
+            var stripe = Stripe(stripeKey);
+
+            var elements = stripe.elements();
+            var style = {
+                base: {
+                    color: "#32325d",
+                },
+            };
+            var card = elements.create("card", {
+                style: style,
+            });
+
+            card.mount("#card-element");
+            card.on("change", ({ error }) => {
+                const displayError = document.getElementById("card-errors");
+                if (error) {
+                    displayError.textContent = error.message;
+                } else {
+                    displayError.textContent = "";
+                }
+            });
+            // end stripe
+
+            var form = document.getElementById("payment-form");
+            form.addEventListener("submit", function (ev) {
+                $("#submit").html("Submitting").prop("disabled", "true");
+                event.preventDefault();
+                // Tokenize card info
+                stripe
+                    .createPaymentMethod({
+                        type: "card",
+                        card: card,
+                        billing_details: {
+                            // Include any additional collected billing details.
+                            name: $("#name").val(),
+                            email: $("#email").val(),
+                        },
+                    })
+                    .then(stripePaymentMethodHandler);
+            });
+
+            function stripePaymentMethodHandler(result) {
+                if (result.error) {
+                    // Show error to user
+                    console.log(result.error);
+                    $("#card-errors").text(result.error.message).removeClass("d-none");
+                    $("#submit").html("Submit!").removeProp("disabled");
+                } else {
+                    // Otherwise send payment method to your server
+
+                    fetch("https://formspree.io/f/" + formSpreeId, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            // Send the tokenized card
+                            _payment_method: result.paymentMethod.id,
+                            email: $("#email").val(),
+                            phone: $("#phone").val(),
+                            first_name: $("#first_name").val(),
+                            last_name: $("#last_name").val(),
+                            student_first_name: $("#student_first_name").val(),
+                            student_last_name: $("#student_last_name").val(),
+                            
+                            // add here any data that you want to send to Formspree
+                        }),
+                    }).then(function (result) {
+                        // Handle server response
+                        result.json().then(function (json) {
+                            handleServerResponse(json);
+                        });
+                    });
+                }
+            }
+
+            function handleServerResponse(response) {
+                console.log(response);
+                $("#submit").html("Submit!").removeProp("disabled");
+                if (response.ok) {
+                    // Display errors on the payment form
+                    $("#payment-form").addClass("d-none");
+                    $("#thank-you").removeClass("d-none");
+                } else {
+                    $("#card-errors").text(response.message).removeClass("d-none");
+                }
+            }
+
+        });
+    </script>
+</body>
