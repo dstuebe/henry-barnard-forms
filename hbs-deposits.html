@@ -39,12 +39,12 @@
 
             <div class="form-group required">
                 <label for="email">Email</label>
-                <input id="email" title="By making a donation, you will receive updates on the Henry Barnard School. You may unsubscribe at any time." class="form-control" type="email" placeholder="name@example.com" required/>
+                <input id="email" title="Thank you for your application deposit, you will receive updates on the Henry Barnard School. You may unsubscribe at any time." class="form-control" type="email" placeholder="name@example.com" required/>
             </div>
 
             <div class="form-group required">
                 <label for="phone">Phone</label>
-                <input id="phone" title="We may contact you at this number about your donation and other opportunities to support the Henry Barnard School." class="form-control" type="phone" placeholder="123-345-6789" required/>
+                <input id="phone" title="We may contact you at this number about your application and other opportunities to support the Henry Barnard School." class="form-control" type="phone" placeholder="123-345-6789" required/>
             </div>
 
             <div class="form-group required">
@@ -70,7 +70,9 @@
             <div id="card-errors" role="alert" class="mb-3 pl-2 pt-2 pb-2 pr-2 d-none"></div>
 
             <div>
-                <p>Your card will be charged $1029</p>
+                <p>Applicaiton fee $1000</p>
+                <p>Card processing fee 2.9%</p>
+                <p>Your card will be charged at total of $1029</p>
                 <button class="btn btn-success" id="submit">Submit!</button>
             </div>
         </form>
@@ -83,12 +85,12 @@
 
     <script>
         // TEST KEYS (use stripe key defined in formspree integration)
-        // let formSpreeId = "mjvplbql"; // test form id
-        // let stripeKey = "pk_test_51Hy74yDnj8WOjoQRNWwos3BTEs1y2N5YGqV8Lfhry9qIRs3v31vV73LBzbNTOS2EDEQdz5lCVm4Hqz4o01aiCdMP00MFJMbz3v";
+        let formSpreeId = "mjvplbql"; // test form id
+        let stripeKey = "pk_test_51Hy74yDnj8WOjoQRNWwos3BTEs1y2N5YGqV8Lfhry9qIRs3v31vV73LBzbNTOS2EDEQdz5lCVm4Hqz4o01aiCdMP00MFJMbz3v";
 
         // PRODUCTION KEYS (use stripe key defined in formspree integration)
-        let formSpreeId = "xdopbnrj";
-        let stripeKey = "pk_live_51Hy74yDnj8WOjoQRFqSgrezK9GEPVvEhrnaSS9Tk3WY7UUqGPd090lmH0YfrjHA7l5klGcC1OokGh6DwaNaXr1tw003mWVhAxc";
+        // let formSpreeId = "xdopbnrj";
+        // let stripeKey = "pk_live_51Hy74yDnj8WOjoQRFqSgrezK9GEPVvEhrnaSS9Tk3WY7UUqGPd090lmH0YfrjHA7l5klGcC1OokGh6DwaNaXr1tw003mWVhAxc";
 
 
         $(document).ready(function () {
